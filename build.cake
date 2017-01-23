@@ -3,7 +3,7 @@
 
 var configuration = Argument("configuration", "Debug");
 var target = Argument("target", "Default");
-string version;
+string version = null;
 Task("Restore")
     .Does(() => 
 {
