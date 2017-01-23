@@ -71,6 +71,6 @@ Task("Pack")
 });
 
 Task("Default")
-    .IsDependentOn("Test");
+    .IsDependentOn("Pack");
 
 RunTarget(target);
