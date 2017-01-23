@@ -3,7 +3,7 @@
 
 var configuration = Argument("configuration", "Debug");
 var target = Argument("target", "Default");
-
+string version;
 Task("Restore")
     .Does(() => 
 {
@@ -18,9 +18,16 @@ Task("Clean")
     CleanDirectories("./**/obj");
 });
 
+Task("PatchAssembly")
+    .Does(() => 
+{
+    version = GitVersion(new GitVersionSettings { UpdateAssemblyInfo = true }).NuGetVersionV2;
+});
+
 Task("Build")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
+    .IsDependentOn("PatchAssembly")
     .Does(() => 
 {
     MSBuild("NCalc.sln", configurator =>
@@ -40,7 +47,6 @@ Task("Pack")
     .IsDependentOn("Test")
     .Does(() =>
 {
-    var version = GitVersion().NuGetVersionV2;
     var nuGetPackSettings   = new NuGetPackSettings 
     {
         Id           = "NCalc-Edge",
