@@ -18,7 +18,7 @@ Task("Clean")
     CleanDirectories("./**/obj");
 });
 
-Task("PatchAssembly")
+Task("UpdateAssemblyInfo")
     .Does(() => 
 {
     version = GitVersion(new GitVersionSettings { UpdateAssemblyInfo = true }).NuGetVersionV2;
@@ -27,7 +27,7 @@ Task("PatchAssembly")
 Task("Build")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
-    .IsDependentOn("PatchAssembly")
+    .IsDependentOn("UpdateAssemblyInfo")
     .Does(() => 
 {
     MSBuild("NCalc.sln", configurator =>
