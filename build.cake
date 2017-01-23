@@ -22,6 +22,10 @@ Task("UpdateAssemblyInfo")
     .Does(() => 
 {
     version = GitVersion(new GitVersionSettings { UpdateAssemblyInfo = true }).NuGetVersionV2;
+    if(BuildSystem.IsRunningOnAppVeyor)
+    {
+        UpdateBuildVersion(version);
+    }
 });
 
 Task("Build")
@@ -41,6 +45,10 @@ Task("Test")
     .Does(() => 
 {
     NUnit3("./**/bin/**/*.Tests.dll");
+    if(BuildSystem.IsRunningOnAppVeyor)
+    {
+        BuildSystem.AppVeyor.UploadTestResults("./TestResult.xml", AppVeyorTestResultsType.NUnit3);
+    }
 });
 
 Task("Pack")
@@ -74,6 +82,12 @@ Task("Pack")
     };
 
     NuGetPack(nuGetPackSettings);
+    if(BuildSystem.IsRunningOnAppVeyor)
+    {
+        UploadArtifact("Evaluant.Calculator/bin/Release/NCalc.dll");
+        var file = GetFiles("nuget/NCalc-Edge*.nupkg")[0];
+        UploadArtifact(file);
+    }
 });
 
 Task("Default")

@@ -6,8 +6,3 @@ build_script:
   - ps: .\build.ps1
 
 test: off
-
-artifacts:
-  - path: Evaluant.Calculator\bin\Release\NCalc.dll
-    name: NCalc.dll
-  - path: '**\NCalc*.nupkg'
